@@ -184,7 +184,7 @@ document.querySelectorAll(".lang button").forEach(b=>b.onclick=()=>setLang(b.dat
 try{const l=localStorage.getItem("lang")||((navigator.language||"").startsWith("ru")?"ru":"uz");if(l!=="uz")setLang(l)}catch(e){}
 document.getElementById("y").textContent=new Date().getFullYear();
 const fmt=n=>new Intl.NumberFormat("ru-RU").format(n);
-fetch(STATS_URL).then(r=>r.json()).then(s=>{const set=(id,v)=>{const el=document.getElementById(id);let c=0;const step=Math.max(1,Math.ceil(v/40));const t=setInterval(()=>{c=Math.min(v,c+step);el.textContent=fmt(c);if(c>=v)clearInterval(t)},25)};set("s-today",s.today);set("s-week",s.week);set("s-total",s.total);set("s-users",s.users)}).catch(()=>{document.getElementById("stats").style.display="none"});
+fetch(STATS_URL).then(r=>r.json()).then(s=>{if(!s||s.total<100){document.getElementById("stats").style.display="none";return}const set=(id,v)=>{const el=document.getElementById(id);let c=0;const step=Math.max(1,Math.ceil(v/40));const t=setInterval(()=>{c=Math.min(v,c+step);el.textContent=fmt(c);if(c>=v)clearInterval(t)},25)};set("s-today",s.today);set("s-week",s.week);set("s-total",s.total);set("s-users",s.users)}).catch(()=>{document.getElementById("stats").style.display="none"});
 </script>
 </body>
 </html>
