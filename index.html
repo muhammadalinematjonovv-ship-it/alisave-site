@@ -1,190 +1,734 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AliSave — Instagram, TikTok, YouTube video yuklash boti</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AliSave.uz — Instagram, TikTok, YouTube videolarini reklamasiz yuklang</title>
 <meta name="description" content="AliSave — Instagram, TikTok, YouTube, Snapchat videolarini reklamasiz va obunasiz yuklab beradigan Telegram bot. Bepul, o'zbek tilida, 2 GB gacha.">
-<meta property="og:title" content="AliSave — video yuklash boti">
-<meta property="og:description" content="Instagram, TikTok, YouTube videolarini reklamasiz, obunasiz, 10 soniyada. Bepul.">
-<meta property="og:url" content="https://alisave.uz">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%23EDEDF0'/%3E%3Cpath d='M16 7v11M10.5 13.5 16 19l5.5-5.5M9 24h14' stroke='%230D0D10' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070708">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%235b6cff'/><path d='M50 22v36M34 44l16 16 16-16M28 74h44' stroke='white' stroke-width='9' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>">
+<meta property="og:url" content="https://alisave.uz">
+<meta property="og:title" content="AliSave.uz — video yuklash boti">
+<meta property="og:description" content="Instagram, TikTok, YouTube videolarini reklamasiz, obunasiz, 10 soniyada. Bepul.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0d17;--bg2:#11142a;--card:#161a33;--line:#252a4d;--text:#eef0ff;--muted:#9aa0c3;--acc:#5b6cff;--acc2:#8b5cf6;--ok:#22c55e}
-*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070708;
+  --bg-2:#0D0D10;
+  --surface:#121216;
+  --surface-2:#17171C;
+  --line:rgba(255,255,255,.08);
+  --line-gold:rgba(240,177,60,.35);
+  --ink:#F2F2F4;
+  --ink-soft:#9A9AA5;
+  --gold:#F0B13C;
+  --gold-2:#FFD97A;
+  --gold-deep:#B87E14;
+  --silver:#E8E8EC;
+  --silver-2:#8E8E99;
+  --ok:#F0B13C;
+  --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
+body{
+  font-family:'Manrope',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:clip;
+}
+h1,h2,h3{font-family:'Sora',sans-serif;font-style:normal;line-height:1.15;letter-spacing:-.015em}
+em,i{font-style:normal}
+.mono{font-family:'JetBrains Mono',monospace}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-header{position:sticky;top:0;z-index:10;backdrop-filter:blur(12px);background:rgba(11,13,23,.75);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.3px}
-.logo svg{width:32px;height:32px}
-.nav-r{display:flex;align-items:center;gap:10px}
-.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
-.lang button{background:none;border:0;color:var(--muted);padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
-.lang button.on{background:var(--card);color:var(--text)}
-.btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;padding:12px 22px;border-radius:12px;font-weight:700;transition:transform .15s,box-shadow .15s;box-shadow:0 8px 30px rgba(91,108,255,.35)}
-.btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(91,108,255,.5)}
-.btn.sm{padding:9px 16px;font-size:14px;box-shadow:none}
-.hero{padding:88px 0 56px;text-align:center;position:relative;overflow:hidden}
-.hero:before{content:"";position:absolute;inset:-40% -20% auto;height:80%;background:radial-gradient(ellipse at center,rgba(91,108,255,.28),transparent 60%);pointer-events:none}
-.hero h1{font-size:clamp(34px,6vw,60px);line-height:1.08;letter-spacing:-1.5px;font-weight:900;max-width:820px;margin:0 auto 18px;position:relative}
-.hero h1 span{background:linear-gradient(90deg,#8ea2ff,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{color:var(--muted);font-size:19px;max-width:620px;margin:0 auto 30px;position:relative}
-.hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
-.ghost{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;border:1px solid var(--line);color:var(--text);font-weight:600;background:var(--bg2)}
-.platforms{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:40px;position:relative}
-.chip{display:flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--bg2);font-size:14px;font-weight:600;color:var(--muted)}
-.chip i{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:36px 0 0;position:relative}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 16px;text-align:center}
-.stat b{display:block;font-size:30px;font-weight:900;letter-spacing:-1px;font-variant-numeric:tabular-nums}
-.stat span{color:var(--muted);font-size:13px}
-section{padding:64px 0}
-h2{font-size:clamp(26px,4vw,36px);letter-spacing:-.8px;font-weight:900;text-align:center;margin-bottom:12px}
-.sub{color:var(--muted);text-align:center;max-width:600px;margin:0 auto 40px;font-size:17px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;transition:border-color .2s,transform .2s}
-.card:hover{border-color:var(--acc);transform:translateY(-3px)}
-.card .ic{font-size:28px;margin-bottom:12px}
-.card h3{font-size:17px;margin-bottom:6px}
-.card p{color:var(--muted);font-size:15px}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
-.step{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:26px 22px;position:relative}
-.step:before{counter-increment:s;content:counter(s);position:absolute;top:-14px;left:22px;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--acc),var(--acc2));display:grid;place-items:center;font-weight:900;font-size:15px}
-.step h3{margin:8px 0 6px;font-size:17px}
-.step p{color:var(--muted);font-size:15px}
-.chat{max-width:420px;margin:40px auto 0;background:#0e1122;border:1px solid var(--line);border-radius:22px;padding:18px;font-size:14px}
-.msg{max-width:85%;padding:10px 14px;border-radius:16px;margin:8px 0;line-height:1.45}
-.me{background:var(--acc);margin-left:auto;border-bottom-right-radius:4px;word-break:break-all}
-.bot{background:#1c2140;border-bottom-left-radius:4px}
-.bot .vid{height:120px;border-radius:10px;background:linear-gradient(135deg,#2a2f5c,#3b2f6b);display:grid;place-items:center;font-size:30px;margin-bottom:8px}
-.bot .kb{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.bot .kb span{background:#2a3060;border-radius:8px;padding:5px 9px;font-size:12px}
-.vs{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:820px;margin:0 auto}
-.vs .card ul{list-style:none;margin-top:10px}
-.vs .card li{padding:7px 0;border-top:1px solid var(--line);font-size:15px;color:var(--muted)}
-.vs .card.good li{color:var(--text)}
-.vs .card li:before{content:"✕ ";color:#f87171;font-weight:700}
-.vs .card.good li:before{content:"✓ ";color:var(--ok)}
-.faq details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:10px;max-width:760px;margin-left:auto;margin-right:auto}
-.faq summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between}
-.faq summary:after{content:"+";color:var(--muted)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px;position:relative;z-index:2}
+
+/* ---------- metallic + gold text ---------- */
+.metal{
+  background:linear-gradient(160deg,#FFFFFF 0%,#CFCFD6 30%,#8F8F9A 50%,#E6E6EC 72%,#A9A9B4 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.goldtext{
+  background:linear-gradient(120deg,var(--gold-deep) 0%,var(--gold) 35%,var(--gold-2) 55%,var(--gold) 75%,var(--gold-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+/* ---------- silk background + gold threads ---------- */
+.silk{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(255,255,255,.045), transparent 60%),
+    radial-gradient(700px 420px at -10% 30%, rgba(255,255,255,.035), transparent 60%),
+    radial-gradient(800px 600px at 60% 110%, rgba(240,177,60,.05), transparent 60%),
+    var(--bg);
+}
+.thread{position:absolute;left:0;width:100%;pointer-events:none;z-index:1;opacity:.9}
+.thread path{fill:none;stroke:url(#goldGrad);stroke-width:1.6}
+.spark{filter:drop-shadow(0 0 6px rgba(255,217,122,.9))}
+
+/* ---------- delivered tick motif ---------- */
+.ticks{display:inline-flex;align-items:flex-end;color:var(--gold);flex:none}
+.ticks svg{width:18px;height:18px}
+.ticks svg:last-child{margin-left:-10px}
+
+/* ---------- header ---------- */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(7,7,8,.78);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{font-family:'Sora',sans-serif;font-weight:800;font-size:20px;display:flex;align-items:center;gap:10px;font-style:normal}
+.logo .send-ic{
+  width:32px;height:32px;border-radius:9px;flex:none;
+  background:linear-gradient(150deg,#FDFDFE,#B9B9C2 45%,#7E7E88 60%,#D9D9DF);
+  display:grid;place-items:center;
+  box-shadow:0 0 0 1px rgba(255,255,255,.15),0 4px 14px rgba(0,0,0,.6);
+}
+.logo .send-ic svg{width:16px;height:16px;fill:#121216}
+.logo .gold{color:var(--gold)}
+.nav-links{display:flex;gap:30px;font-weight:600;font-size:14.5px;color:var(--ink-soft)}
+.nav-links a{transition:.15s}
+.nav-links a:hover{color:var(--gold-2)}
+.nav-cta{display:flex;gap:10px;align-items:center}
+/* mobil hamburger menyu */
+.nav-toggle{display:none;width:44px;height:44px;border-radius:11px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;align-items:center;justify-content:center;flex:none;transition:.18s}
+.nav-toggle:hover{border-color:var(--line-gold)}
+.nav-toggle svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.mobile-menu{display:none;position:fixed;left:0;right:0;top:70px;z-index:49;background:rgba(7,7,8,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px 24px 22px;flex-direction:column}
+.mobile-menu.open{display:flex}
+.mobile-menu a.mlink{padding:15px 4px;font-weight:600;font-size:16px;color:var(--ink-soft);border-bottom:1px solid var(--line);transition:.15s}
+.mobile-menu a.mlink:hover{color:var(--gold-2)}
+.mm-actions{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.mm-actions .btn{width:100%}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;justify-content:center;
+  padding:12px 22px;border-radius:12px;font-weight:700;font-size:15px;
+  border:none;cursor:pointer;font-family:'Manrope',sans-serif;transition:.18s;
+}
+.btn-gold{
+  background:linear-gradient(120deg,var(--gold-deep),var(--gold) 30%,var(--gold-2) 50%,var(--gold) 70%,var(--gold-deep));
+  background-size:220% 100%;
+  animation:goldshift 3.5s ease-in-out infinite;
+  color:#161006;
+  box-shadow:0 8px 24px rgba(240,177,60,.28),inset 0 1px 0 rgba(255,255,255,.4);
+  position:relative;overflow:hidden;
+}
+@keyframes goldshift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.btn-gold::after{
+  content:"";position:absolute;top:0;left:-80%;width:55%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:skewX(-20deg);
+  animation:sheen 3.2s ease-in-out infinite;
+}
+@keyframes sheen{0%,55%{left:-80%}85%,100%{left:130%}}
+.goldtext-live{
+  background:linear-gradient(120deg,var(--gold-deep),var(--gold) 30%,var(--gold-2) 50%,var(--gold) 70%,var(--gold-deep));
+  background-size:220% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:goldshift 3.5s ease-in-out infinite;
+}
+.metal-live{
+  background:linear-gradient(120deg,#FFFFFF 0%,#CFCFD6 22%,#84848F 42%,#F5F5FA 55%,#9A9AA5 72%,#E6E6EC 100%);
+  background-size:250% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:goldshift 5s ease-in-out infinite;
+}
+/* animated round logo */
+.logo-anim{width:36px;height:36px;flex:none;position:relative}
+.logo-anim .lglow{
+  position:absolute;inset:-22%;border-radius:50%;
+  background:radial-gradient(circle,rgba(240,177,60,.5),transparent 65%);
+  animation:lpulse 2.6s ease-in-out infinite;
+}
+@keyframes lpulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+.logo-anim svg{position:relative;width:100%;height:100%}
+.ring-spin{transform-origin:60px 60px;animation:lspin 9s linear infinite}
+@keyframes lspin{to{transform:rotate(360deg)}}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(240,177,60,.4),inset 0 1px 0 rgba(255,255,255,.4)}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--line-gold);color:var(--gold-2)}
+.btn-lg{padding:16px 30px;font-size:16px;border-radius:14px}
+
+/* ---------- hero ---------- */
+.hero{padding:84px 0 48px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  background:rgba(240,177,60,.08);border:1px solid var(--line-gold);border-radius:999px;
+  padding:7px 15px;font-size:13px;font-weight:700;color:var(--gold-2);
+  margin-bottom:24px;letter-spacing:.02em;
+}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pulse 1.6s infinite;box-shadow:0 0 8px var(--gold)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:clamp(30px,4.4vw,50px);font-weight:800;margin-bottom:22px}
+.hero p.lead{font-size:17.5px;color:var(--ink-soft);max-width:520px;margin-bottom:32px;font-weight:500}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px}
+.hero-note{font-size:14px;color:var(--ink-soft);display:flex;align-items:center;gap:9px;font-weight:600}
+
+/* phone mockup — dark telegram */
+.phone{
+  width:340px;max-width:100%;
+  background:#101014;border-radius:34px;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 0 0 1px rgba(240,177,60,.12),0 40px 80px rgba(0,0,0,.7),0 0 60px rgba(240,177,60,.06);
+  overflow:hidden;margin:0 auto;position:relative;
+}
+.phone-top{
+  background:linear-gradient(135deg,#1B1B21,#131317);
+  border-bottom:1px solid var(--line);
+  color:var(--ink);padding:16px 18px 14px;display:flex;align-items:center;gap:12px;
+}
+.chat-av{
+  width:38px;height:38px;border-radius:50%;flex:none;
+  background:linear-gradient(150deg,#FDFDFE,#B9B9C2 45%,#7E7E88 60%,#D9D9DF);
+  color:#121216;display:grid;place-items:center;font-weight:800;font-size:15px;font-family:'Sora',sans-serif;
+}
+.chat-name{font-weight:700;font-size:15px}
+.chat-sub{font-size:12px;color:var(--gold)}
+.chat-body{
+  background:#0B0B0E;
+  min-height:390px;max-height:390px;
+  padding:14px 12px;
+  display:flex;flex-direction:column;gap:10px;
+  overflow:hidden;justify-content:flex-end;
+}
+.msg{
+  background:#17171D;border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;border-top-left-radius:4px;
+  padding:11px 13px;max-width:94%;
+  font-size:13px;
+  animation:drop .45s cubic-bezier(.2,.9,.3,1.2);
+}
+@keyframes drop{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+.msg .m-title{font-weight:800;color:var(--gold);font-size:12.5px;margin-bottom:5px}
+.msg .m-row{display:flex;gap:6px;margin:2px 0}
+.msg .m-k{color:var(--ink-soft);flex:none}
+.msg .m-v{font-weight:700;color:var(--ink)}
+.msg .m-foot{display:flex;justify-content:flex-end;align-items:center;gap:5px;margin-top:5px;color:var(--ink-soft);font-size:11px}
+.msg .m-foot .ticks svg{width:14px;height:14px}
+.msg .m-foot .ticks svg:last-child{margin-left:-8px}
+
+.hero-visual{position:relative}
+.float-badge{
+  position:absolute;background:var(--surface);border:1px solid var(--line-gold);
+  border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.6);
+  padding:10px 14px;font-size:13px;font-weight:700;color:var(--ink);
+  display:flex;align-items:center;gap:9px;z-index:2;
+}
+.float-badge .ic{
+  width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:none;
+  background:linear-gradient(150deg,#FDFDFE,#B9B9C2 45%,#7E7E88 60%,#D9D9DF);color:#121216;
+}
+.fb-1{top:34px;left:-14px;animation:floaty 5s ease-in-out infinite}
+.fb-2{bottom:64px;right:-10px;animation:floaty 6s ease-in-out infinite reverse}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+
+/* ---------- sections ---------- */
+section{padding:80px 0;position:relative;z-index:2}
+.sec-head{max-width:640px;margin:0 auto 50px;text-align:center}
+.sec-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+}
+.sec-eyebrow::before,.sec-eyebrow::after{
+  content:"";height:1px;width:34px;
+  background:linear-gradient(90deg,transparent,var(--gold));
+}
+.sec-eyebrow::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.sec-head h2{font-size:clamp(24px,3.2vw,34px);font-weight:700;margin-bottom:14px}
+.sec-head p{color:var(--ink-soft);font-size:16px;font-weight:500}
+
+/* ---------- pipeline ---------- */
+.pipeline{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0;align-items:stretch}
+.pipe-card{
+  background:linear-gradient(180deg,var(--surface-2),var(--surface));
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:28px 24px;position:relative;
+}
+.pipe-card::before{
+  content:"";position:absolute;inset:0;border-radius:var(--radius);padding:1px;
+  background:linear-gradient(150deg,rgba(240,177,60,.4),transparent 40%,transparent 70%,rgba(240,177,60,.15));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+}
+.p-ic{
+  width:48px;height:48px;border-radius:13px;display:grid;place-items:center;margin-bottom:18px;
+  background:linear-gradient(150deg,#FDFDFE,#B9B9C2 45%,#7E7E88 60%,#D9D9DF);color:#121216;
+  box-shadow:0 6px 18px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.6);
+}
+.pipe-card h3{font-size:16.5px;font-weight:700;margin-bottom:9px}
+.pipe-card p{font-size:14.5px;color:var(--ink-soft)}
+.pipe-arrow{display:grid;place-items:center;padding:0 14px;color:var(--gold)}
+.pipe-arrow svg{width:26px;height:26px;filter:drop-shadow(0 0 6px rgba(240,177,60,.5))}
+
+/* ---------- destinations ---------- */
+.dest-strip{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:40px}
+.dest{
+  display:flex;align-items:center;gap:9px;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;
+}
+.dest .d-dot{
+  width:23px;height:23px;border-radius:7px;display:grid;place-items:center;flex:none;
+  font-size:10.5px;font-weight:800;
+  background:linear-gradient(150deg,#FDFDFE,#B9B9C2 45%,#7E7E88 60%,#D9D9DF);color:#121216;
+}
+.dest.soon{opacity:.55}
+.dest .soon-tag{font-size:11px;font-weight:800;color:var(--gold);background:rgba(240,177,60,.12);border-radius:6px;padding:2px 8px}
+
+/* ---------- features ---------- */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feat{
+  background:linear-gradient(180deg,var(--surface-2),var(--surface));
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:28px;transition:.2s;
+}
+.feat:hover{border-color:var(--line-gold);transform:translateY(-3px)}
+.f-ic{
+  width:44px;height:44px;border-radius:12px;display:grid;place-items:center;margin-bottom:16px;
+  background:linear-gradient(150deg,#FDFDFE,#B9B9C2 45%,#7E7E88 60%,#D9D9DF);color:#121216;
+  box-shadow:0 6px 16px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.6);
+}
+.feat h3{font-size:16px;font-weight:700;margin-bottom:9px}
+.feat p{font-size:14.5px;color:var(--ink-soft)}
+.feat.star{
+  border:1px solid var(--line-gold);position:relative;
+  background:linear-gradient(180deg,rgba(240,177,60,.07),var(--surface));
+}
+.feat.star .f-tag{
+  position:absolute;top:-11px;right:18px;
+  background:linear-gradient(120deg,var(--gold-deep),var(--gold),var(--gold-2));color:#161006;
+  font-size:11.5px;font-weight:800;padding:3px 12px;border-radius:999px;letter-spacing:.03em;
+}
+
+/* ---------- pricing ---------- */
+.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:stretch}
+.plan{
+  background:linear-gradient(180deg,var(--surface-2),var(--surface));
+  border:1px solid var(--line);border-radius:20px;
+  padding:28px 24px;display:flex;flex-direction:column;
+}
+.plan.hot{
+  border:1px solid var(--line-gold);position:relative;transform:translateY(-6px);
+  background:linear-gradient(180deg,rgba(240,177,60,.09),var(--surface));
+  box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 40px rgba(240,177,60,.08);
+}
+.plan.hot .hot-tag{
+  position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(120deg,var(--gold-deep),var(--gold),var(--gold-2));color:#161006;
+  font-size:12px;font-weight:800;padding:4px 15px;border-radius:999px;white-space:nowrap;
+}
+.pl-name{font-weight:800;font-size:14px;color:var(--ink-soft);margin-bottom:12px;letter-spacing:.08em;text-transform:uppercase}
+.pl-price{font-family:'Sora',sans-serif;font-size:25px;font-weight:800;margin-bottom:2px}
+.pl-price span{font-size:13px;font-weight:500;color:var(--ink-soft);font-family:'Manrope',sans-serif}
+.pl-limit{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:20px}
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:10px;font-size:13.8px;color:var(--ink-soft);margin-bottom:24px;flex:1}
+.plan ul li{display:flex;gap:9px;align-items:flex-start}
+.plan ul li .li-tick{color:var(--gold);flex:none;font-weight:800}
+.plan .btn{width:100%}
+
+/* ---------- final cta ---------- */
+.final{
+  background:
+    radial-gradient(600px 300px at 50% -40%, rgba(240,177,60,.22), transparent 70%),
+    linear-gradient(180deg,var(--surface-2),var(--surface));
+  border:1px solid var(--line-gold);
+  border-radius:26px;color:var(--ink);text-align:center;
+  padding:66px 32px;position:relative;overflow:hidden;
+}
+.final h2{font-size:clamp(24px,3vw,34px);font-weight:800;margin-bottom:14px}
+.final p{color:var(--ink-soft);font-size:16.5px;margin-bottom:30px;font-weight:500}
+.final .paper{position:absolute;opacity:.06;font-size:130px;transform:rotate(-12deg);color:var(--gold);font-weight:800}
+
+/* ---------- footer ---------- */
+footer{padding:44px 0 38px;border-top:1px solid var(--line);margin-top:80px;position:relative;z-index:2}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;color:var(--ink-soft);font-size:14px;font-weight:600}
+.foot .logo{font-size:17px}
+.foot a.tg{color:var(--gold);font-weight:700}
+
+/* ---------- comparison table ---------- */
+.cmp{max-width:840px;margin:0 auto;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:linear-gradient(180deg,var(--surface-2),var(--surface));position:relative}
+.ck{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex:none}
+.ck svg{width:15px;height:15px}
+.ck.yes{background:rgba(61,220,132,.14);color:var(--ok)}
+.ck.no{background:rgba(255,255,255,.05);color:#55555F}
+
+/* ---------- responsive ---------- */
+@media(max-width:960px){
+  .hero-grid{grid-template-columns:1fr;gap:44px}
+  /* Grid elementlarining sukut bo'yicha min-width:auto — ya'ni ular
+     ichidagi eng keng bo'lakdan (bu yerda "Bepul boshlash" tugmasi)
+     TORAYA OLMAYDI. 320px ekranda sarlavha va matn shu sababli
+     o'ng chetdan qirqilardi, sahifani surib ham ko'rib bo'lmasdi
+     (body overflow-x:clip). */
+  .hero-grid > *{min-width:0}
+  .hero-ctas .btn{max-width:100%;white-space:normal;text-align:center}
+  .hero p.lead{max-width:none}
+  .pipeline{grid-template-columns:1fr}
+  .pipe-arrow{transform:rotate(90deg);padding:8px 0}
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .price-grid{grid-template-columns:1fr 1fr}
+  .plan.hot{transform:none}
+  .nav-links{display:none}
+  .nav-cta{display:none}
+  .nav-toggle{display:inline-flex}
+}
+@media(max-width:600px){
+  .feat-grid,.price-grid{grid-template-columns:1fr}
+  section{padding:58px 0}
+  .fb-1{left:0}.fb-2{right:0}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+<style>
+/* ---------- AliSave qo'shimchalari ---------- */
+.lang{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-right:4px}
+.lang button{background:none;border:0;color:var(--ink-soft);padding:7px 12px;cursor:pointer;font:700 12.5px 'Manrope',sans-serif;transition:.15s}
+.lang button.on{background:var(--surface-2);color:var(--gold-2)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px}
+.stat{background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--line);border-radius:var(--radius);padding:20px 18px;text-align:center}
+.stat b{display:block;font-family:'Sora',sans-serif;font-size:30px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat span{color:var(--ink-soft);font-size:13px;font-weight:600}
+.msg.me{background:linear-gradient(120deg,var(--gold-deep),var(--gold) 60%,var(--gold-2));color:#161006;border:none;border-radius:14px;border-top-right-radius:4px;border-top-left-radius:14px;align-self:flex-end;font-weight:700;word-break:break-all}
+.msg .vid{height:96px;border-radius:10px;background:linear-gradient(150deg,#232329,#141418);display:grid;place-items:center;margin-bottom:8px;position:relative;overflow:hidden}
+.msg .vid::after{content:"";position:absolute;inset:0;background:radial-gradient(200px 80px at 30% 20%,rgba(240,177,60,.18),transparent 60%)}
+.msg .play{width:34px;height:34px;border-radius:50%;background:linear-gradient(150deg,#FDFDFE,#B9B9C2 45%,#7E7E88 60%,#D9D9DF);display:grid;place-items:center;position:relative;z-index:1}
+.msg .play svg{width:14px;height:14px;fill:#121216;margin-left:2px}
+.msg .kb{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.msg .kb span{background:#22222A;border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:11.5px;font-weight:700;color:var(--ink)}
+.msg .kb span.g{color:var(--gold-2);border-color:var(--line-gold)}
+.msg.typing{color:var(--ink-soft);font-style:normal}
+.faq details{background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--line);border-radius:16px;padding:18px 22px;margin:0 auto 10px;max-width:800px;transition:.2s}
+.faq details[open]{border-color:var(--line-gold)}
+.faq summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:15.5px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";color:var(--gold);font-size:20px;font-weight:800}
 .faq details[open] summary:after{content:"–"}
-.faq p{color:var(--muted);margin-top:10px;font-size:15px}
-.final{text-align:center;padding:80px 0;background:linear-gradient(180deg,transparent,rgba(91,108,255,.08))}
-footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:14px}
-footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-footer a{color:var(--text)}
-@media(max-width:820px){.grid,.steps,.stats{grid-template-columns:1fr 1fr}.vs{grid-template-columns:1fr}}
-@media(max-width:520px){.grid,.steps{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.hero{padding:56px 0 40px}section{padding:48px 0}}
+.faq p{color:var(--ink-soft);margin-top:10px;font-size:14.5px;font-weight:500}
+.cmp-row{display:grid;grid-template-columns:1.4fr 1fr 1fr;align-items:center;padding:14px 22px;border-top:1px solid var(--line);font-size:14.5px;font-weight:600}
+.cmp-row:first-child{border-top:none;background:rgba(255,255,255,.03);font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+.cmp-row>div:nth-child(2),.cmp-row>div:nth-child(3){display:flex;justify-content:center}
+.cmp-row .gold-col{color:var(--gold-2)}
+@media(max-width:820px){.stats{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.cmp-row{grid-template-columns:1.2fr .6fr .6fr;padding:12px 14px;font-size:13px}}
 </style>
 </head>
 <body>
-<header><div class="wrap nav">
-  <a class="logo" href="#"><svg viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#5b6cff"/><path d="M50 22v36M34 44l16 16 16-16M28 74h44" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>AliSave</a>
-  <div class="nav-r">
-    <div class="lang"><button data-l="uz" class="on">UZ</button><button data-l="ru">RU</button></div>
-    <a class="btn sm" href="https://t.me/AliSaveUzBot" target="_blank" rel="noopener" data-i="open">Telegram'da ochish</a>
-  </div>
-</div></header>
 
-<main>
-<section class="hero"><div class="wrap">
-  <h1 data-i="h1">Instagram, TikTok, YouTube videolarini <span>reklamasiz</span> yuklab oling</h1>
-  <p data-i="lead">Linkni botga tashlang, 10 soniyada video keladi. Majburiy obuna yo'q, reklama yo'q, sifat tanlash — o'zingizda. Bepul.</p>
-  <div class="cta">
-    <a class="btn" href="https://t.me/AliSaveUzBot" target="_blank" rel="noopener">✈️ <span data-i="cta">@AliSaveUzBot ni ochish</span></a>
-    <a class="ghost" href="#how" data-i="how">Qanday ishlaydi?</a>
-  </div>
-  <div class="platforms">
-    <span class="chip"><i></i>Instagram</span><span class="chip"><i></i>TikTok</span><span class="chip"><i></i>YouTube</span><span class="chip"><i></i>Shorts</span><span class="chip"><i></i>Snapchat</span><span class="chip"><i></i>Facebook</span><span class="chip"><i></i>X (Twitter)</span><span class="chip"><i></i>Pinterest</span><span class="chip"><i></i>Likee</span><span class="chip"><i></i>+1700 sayt</span>
-  </div>
-  <div class="stats" id="stats">
-    <div class="stat"><b id="s-today">—</b><span data-i="s_today">bugun yuklandi</span></div>
-    <div class="stat"><b id="s-week">—</b><span data-i="s_week">oxirgi 7 kun</span></div>
-    <div class="stat"><b id="s-total">—</b><span data-i="s_total">jami yuklash</span></div>
-    <div class="stat"><b id="s-users">—</b><span data-i="s_users">foydalanuvchi</span></div>
-  </div>
-</div></section>
+<div class="silk"></div>
 
-<section id="features"><div class="wrap">
-  <h2 data-i="f_h">Nima uchun AliSave?</h2>
-  <p class="sub" data-i="f_sub">Boshqa botlar sizni kanalga obuna qildiradi, reklama ko'rsatadi, navbatga qo'yadi. Biz yo'q.</p>
-  <div class="grid">
-    <div class="card"><div class="ic">🚫</div><h3 data-i="f1">Reklama va obuna yo'q</h3><p data-i="f1p">Hech qanday "kanalga obuna bo'ling". Link tashladingiz, video keldi.</p></div>
-    <div class="card"><div class="ic">📦</div><h3 data-i="f2">2 GB gacha</h3><p data-i="f2p">Uzun YouTube videolar ham to'liq, 1080p va undan yuqori sifatda keladi.</p></div>
-    <div class="card"><div class="ic">💧</div><h3 data-i="f3">TikTok suv belgisiz</h3><p data-i="f3p">Videolar toza, logotipsiz. Instagram rasm va karusellar ham yuklanadi.</p></div>
-    <div class="card"><div class="ic">🎵</div><h3 data-i="f4">MP3 va musiqa qidirish</h3><p data-i="f4p">Har videodan musiqasini oling yoki shunchaki qo'shiq nomini yozing.</p></div>
-    <div class="card"><div class="ic">👥</div><h3 data-i="f5">Guruhda ham ishlaydi</h3><p data-i="f5p">Guruhga qo'shing — kimdir link tashlasa, bot videoni o'sha yerga qaytaradi.</p></div>
-    <div class="card"><div class="ic">⭕</div><h3 data-i="f6">Dumaloq video va ulashish</h3><p data-i="f6p">Bir tugma bilan dumaloq video qiling yoki do'stingizga to'g'ridan-to'g'ri yuboring.</p></div>
+<svg class="thread" style="top:0;height:340px" viewBox="0 0 1440 340" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#B87E14" stop-opacity="0"/>
+      <stop offset=".35" stop-color="#F0B13C"/>
+      <stop offset=".5" stop-color="#FFD97A"/>
+      <stop offset=".65" stop-color="#F0B13C"/>
+      <stop offset="1" stop-color="#B87E14" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <path d="M-40,240 C260,120 520,300 780,180 C1020,70 1240,150 1480,60"/>
+  <circle class="spark" cx="500" cy="228" r="3.4" fill="#FFD97A"/>
+</svg>
+
+<!-- ======= HEADER ======= -->
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="/">
+      <span class="logo-anim"><span class="lglow"></span><svg viewBox="0 0 120 120"><defs><radialGradient id="coinG" cx="32%" cy="28%" r="80%"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".3" stop-color="#D8D8DF"/><stop offset=".62" stop-color="#8F8F9A"/><stop offset="1" stop-color="#C9C9D2"/></radialGradient><linearGradient id="goldLg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B87E14"/><stop offset=".45" stop-color="#F0B13C"/><stop offset=".6" stop-color="#FFD97A"/><stop offset="1" stop-color="#B87E14"/></linearGradient></defs><circle cx="60" cy="60" r="52" fill="url(#coinG)"/><circle cx="60" cy="60" r="52" fill="none" stroke="url(#goldLg)" stroke-width="4"/><g class="ring-spin"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFEDBE" stroke-width="4" stroke-dasharray="34 293" stroke-linecap="round" opacity=".85"/></g><path d="M60 30v34M41 49l19 19 19-19M38 88h44" stroke="#121216" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M60 34v28" stroke="url(#goldLg)" stroke-width="3" stroke-linecap="round" fill="none"/></svg></span>
+      <span class="metal-live">AliSave</span><span class="goldtext-live">.uz</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#how" data-i="n_how">Qanday ishlaydi</a>
+      <a href="#features" data-i="n_feat">Imkoniyatlar</a>
+      <a href="#faq" data-i="n_faq">Savol-javob</a>
+    </nav>
+    <div class="nav-cta">
+      <div class="lang"><button data-l="uz" class="on">UZ</button><button data-l="ru">RU</button></div>
+      <a class="btn btn-gold" href="https://t.me/AliSaveUzBot" target="_blank" rel="noopener" data-i="open">Botni ochish</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Menyu" aria-expanded="false" aria-controls="mobileMenu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
   </div>
-</div></section>
-
-<section id="how"><div class="wrap">
-  <h2 data-i="h_h">Qanday ishlaydi?</h2>
-  <p class="sub" data-i="h_sub">Uch qadam, o'n soniya.</p>
-  <div class="steps">
-    <div class="step"><h3 data-i="st1">Linkni nusxalang</h3><p data-i="st1p">Instagram, TikTok yoki YouTube'da "Ulashish" → "Nusxalash".</p></div>
-    <div class="step"><h3 data-i="st2">Botga tashlang</h3><p data-i="st2p">@AliSaveUzBot ga yuboring. Yoki istalgan chatda @AliSaveUzBot link deb yozing.</p></div>
-    <div class="step"><h3 data-i="st3">Video tayyor</h3><p data-i="st3p">Video chatda darhol ijro bo'ladi. Tagida MP3, dumaloq, ulashish tugmalari.</p></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a class="mlink" href="#how" data-i="n_how">Qanday ishlaydi</a>
+    <a class="mlink" href="#features" data-i="n_feat">Imkoniyatlar</a>
+    <a class="mlink" href="#faq" data-i="n_faq">Savol-javob</a>
+    <div class="mm-actions">
+      <div class="lang" style="align-self:flex-start"><button data-l="uz" class="on">UZ</button><button data-l="ru">RU</button></div>
+      <a class="btn btn-gold" href="https://t.me/AliSaveUzBot" target="_blank" rel="noopener" data-i="open">Botni ochish</a>
+    </div>
   </div>
-  <div class="chat">
-    <div class="msg me">https://www.instagram.com/reel/DdBxB…</div>
-    <div class="msg bot"><div class="vid">▶️</div>👤 beyondhijrah<br>🔗 Instagram<br>📥 @AliSaveUzBot<div class="kb"><span>🎵 MP3</span><span>⭕ Dumaloq</span><span>↗️ Ulashish</span></div></div>
+</header>
+
+<!-- ======= HERO ======= -->
+<div class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> <span data-i="eyebrow">Hozir ham videolar yuklanmoqda</span></div>
+      <h1><span class="metal" data-i="h1a">Link tashladingiz —</span><br><span class="metal" data-i="h1b">10 soniyada</span> <span class="goldtext-live" data-i="h1c">video qo'lingizda</span></h1>
+      <p class="lead" data-i="lead">Instagram, TikTok, YouTube, Snapchat va 1700+ saytdan videolarni Telegram'ning o'zida yuklab beramiz. Reklama yo'q, majburiy obuna yo'q, navbat yo'q. Bepul.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-gold btn-lg" href="https://t.me/AliSaveUzBot" target="_blank" rel="noopener" data-i="cta">Botni ochish — bepul</a>
+        <a class="btn btn-ghost btn-lg" href="#how" data-i="how">Qanday ishlaydi?</a>
+      </div>
+      <div class="hero-note">
+        <span class="ticks">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13l5 5L20 7"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13l5 5L20 7"/></svg>
+        </span>
+        <span data-i="note">Ro'yxatdan o'tishsiz. TikTok suv belgisiz. 2 GB gacha.</span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="float-badge fb-1">
+        <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></span>
+        <span data-i="fb1">Instagram reel yuklandi · 4s</span>
+      </div>
+      <div class="float-badge fb-2">
+        <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 13l5 5L20 7"/></svg></span>
+        <span data-i="fb2">TikTok · suv belgisiz</span>
+      </div>
+      <div class="phone">
+        <div class="phone-top">
+          <div class="chat-av">A</div>
+          <div>
+            <div class="chat-name">AliSave</div>
+            <div class="chat-sub" data-i="online">bot · onlayn</div>
+          </div>
+        </div>
+        <div class="chat-body" id="chatBody"></div>
+      </div>
+    </div>
   </div>
-</div></section>
 
-<section><div class="wrap">
-  <h2 data-i="v_h">Oddiy botlar vs AliSave</h2>
-  <div class="vs">
-    <div class="card"><h3 data-i="v_o">Oddiy yuklovchi botlar</h3><ul>
-      <li data-i="vo1">Har videodan keyin reklama</li><li data-i="vo2">"Kanalga obuna bo'ling" majburiyati</li><li data-i="vo3">"Navbatda 15 kishi, kuting"</li><li data-i="vo4">50 MB limit, sifat pasaygan</li><li data-i="vo5">TikTok suv belgisi bilan</li></ul></div>
-    <div class="card good"><h3>AliSave</h3><ul>
-      <li data-i="va1">Reklama yo'q, hech qachon</li><li data-i="va2">Obuna yo'q</li><li data-i="va3">Parallel, navbat yo'q</li><li data-i="va4">2 GB, sifatni o'zingiz tanlaysiz</li><li data-i="va5">Suv belgisiz, original</li></ul></div>
+  <div class="wrap">
+    <div class="stats" id="stats" hidden>
+      <div class="stat"><b id="s-today">—</b><span data-i="s_today">bugun yuklandi</span></div>
+      <div class="stat"><b id="s-week">—</b><span data-i="s_week">oxirgi 7 kun</span></div>
+      <div class="stat"><b id="s-total">—</b><span data-i="s_total">jami yuklash</span></div>
+      <div class="stat"><b id="s-users">—</b><span data-i="s_users">foydalanuvchi</span></div>
+    </div>
   </div>
-</div></section>
+</div>
 
-<section class="faq"><div class="wrap">
-  <h2 data-i="q_h">Savol-javob</h2>
-  <details><summary data-i="q1">Haqiqatan bepulmi?</summary><p data-i="q1a">Ha. Reklama ham, pullik "premium" ham yo'q. Bot Ali Digital mahsulotlaridan biri.</p></details>
-  <details><summary data-i="q2">Yopiq (private) akkauntlardan yuklaydimi?</summary><p data-i="q2a">Yo'q. Faqat ochiq (public) postlar. Bu Instagram va TikTok qoidasi, hech bir bot buni chetlab o'ta olmaydi.</p></details>
-  <details><summary data-i="q3">Qaysi saytlarni qo'llab-quvvatlaydi?</summary><p data-i="q3a">Instagram (reel, post, karusel), TikTok, YouTube va Shorts, Snapchat Spotlight, Facebook, X, Pinterest, Likee, VK, Reddit, Twitch va jami 1700 dan ortiq sayt.</p></details>
-  <details><summary data-i="q4">Guruhga qanday qo'shaman?</summary><p data-i="q4a">Guruh sozlamalari → A'zo qo'shish → @AliSaveUzBot. Shundan keyin guruhdagi har bir linkka bot video qaytaradi.</p></details>
-  <details><summary data-i="q5">Musiqa qidirish qanday ishlaydi?</summary><p data-i="q5a">Botga shunchaki qo'shiq nomini yozing, masalan "Yomg'ir". 5 ta natija chiqadi, tanlaganingiz MP3 bo'lib keladi.</p></details>
-</div></section>
+<!-- ======= HOW ======= -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow" data-i="how_eb">Qanday ishlaydi</div>
+      <h2 class="metal" data-i="how_h">Uch qadam — va video Telegram'ingizda</h2>
+      <p data-i="how_p">Ilova o'rnatish shart emas. Ro'yxatdan o'tish shart emas. Faqat link.</p>
+    </div>
+    <div class="pipeline">
+      <div class="pipe-card">
+        <div class="p-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div>
+        <h3 data-i="st1">Linkni nusxalang</h3>
+        <p data-i="st1p">Instagram, TikTok yoki YouTube'da "Ulashish" → "Havolani nusxalash".</p>
+      </div>
+      <div class="pipe-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      <div class="pipe-card">
+        <div class="p-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M2.4 11.6 20.2 4.2c.8-.3 1.6.4 1.3 1.3l-3 14.3c-.2.9-1.2 1.2-1.9.6l-4.6-3.4-2.2 2.1c-.4.4-1 .2-1.1-.4l-.5-3.9 8.4-7.6c.3-.3-.1-.5-.5-.2L5.7 13.1l-3.4-1.1c-.9-.3-.9-1.1.1-1.4z"/></svg></div>
+        <h3 data-i="st2">Botga tashlang</h3>
+        <p data-i="st2p">@AliSaveUzBot ga yuboring. Yoki istalgan chatda @AliSaveUzBot link deb yozing.</p>
+      </div>
+      <div class="pipe-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      <div class="pipe-card">
+        <div class="p-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></div>
+        <h3 data-i="st3">Video tayyor</h3>
+        <p data-i="st3p">Chatda darhol ijro bo'ladi. Tagida MP3, dumaloq video va ulashish tugmalari.</p>
+      </div>
+    </div>
+    <div class="dest-strip">
+      <div class="dest"><span class="d-dot">IG</span>Instagram</div>
+      <div class="dest"><span class="d-dot">TT</span>TikTok</div>
+      <div class="dest"><span class="d-dot">YT</span>YouTube</div>
+      <div class="dest"><span class="d-dot">SH</span>Shorts</div>
+      <div class="dest"><span class="d-dot">SC</span>Snapchat</div>
+      <div class="dest"><span class="d-dot">FB</span>Facebook</div>
+      <div class="dest"><span class="d-dot">X</span>X (Twitter)</div>
+      <div class="dest"><span class="d-dot">PI</span>Pinterest</div>
+      <div class="dest"><span class="d-dot">LK</span>Likee</div>
+      <div class="dest"><span class="d-dot">+</span><span data-i="more">1700+ sayt</span></div>
+    </div>
+  </div>
+</section>
 
-<section class="final"><div class="wrap">
-  <h2 data-i="c_h">Hoziroq sinab ko'ring</h2>
-  <p class="sub" data-i="c_sub">Ro'yxatdan o'tish yo'q. Botni oching, link tashlang.</p>
-  <a class="btn" href="https://t.me/AliSaveUzBot" target="_blank" rel="noopener">✈️ <span data-i="cta">@AliSaveUzBot ni ochish</span></a>
-</div></section>
-</main>
+<!-- ======= FEATURES ======= -->
+<section id="features" style="padding-top:24px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow" data-i="f_eb">Imkoniyatlar</div>
+      <h2 class="metal" data-i="f_h">Boshqa botlar bera olmagan narsa</h2>
+      <p data-i="f_sub">Ular kanalga obuna qildiradi, reklama ko'rsatadi, navbatga qo'yadi. Biz — yo'q.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat star"><span class="f-tag" data-i="tag">ASOSIY FARQ</span>
+        <div class="f-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></svg></div>
+        <h3 data-i="f1">Reklama va obuna yo'q</h3><p data-i="f1p">Hech qanday "kanalga obuna bo'ling". Link tashladingiz — video keldi. Hech qachon reklama bo'lmaydi.</p></div>
+      <div class="feat">
+        <div class="f-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 15h4M7 11h10"/></svg></div>
+        <h3 data-i="f2">2 GB gacha, sifatni o'zingiz tanlaysiz</h3><p data-i="f2p">Uzun YouTube videolar to'liq keladi. 360p dan 4K gacha — hajmi bilan ko'rsatib, tanlashni sizga qoldiramiz.</p></div>
+      <div class="feat">
+        <div class="f-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 7-7 11-7-11z"/></svg></div>
+        <h3 data-i="f3">TikTok suv belgisiz</h3><p data-i="f3p">Videolar toza, logotipsiz, original sifatda. Instagram rasm va karusellar ham albom bo'lib keladi.</p></div>
+      <div class="feat">
+        <div class="f-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l11-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></div>
+        <h3 data-i="f4">MP3 va musiqa qidirish</h3><p data-i="f4p">Har videodan musiqasini bir tugma bilan oling. Yoki shunchaki qo'shiq nomini yozing — 5 ta natija, tanlaganingiz MP3.</p></div>
+      <div class="feat">
+        <div class="f-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M15 15c2.8 0 5 2 5 5"/></svg></div>
+        <h3 data-i="f5">Guruhda ham ishlaydi</h3><p data-i="f5p">Guruhga qo'shing — kimdir link tashlasa, bot videoni o'sha yerga qaytaradi. Oila va do'stlar guruhlari uchun.</p></div>
+      <div class="feat">
+        <div class="f-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg></div>
+        <h3 data-i="f6">Dumaloq video va ulashish</h3><p data-i="f6p">Bir tugma — dumaloq video. Yana bir tugma — do'stingizga to'g'ridan-to'g'ri yuborish, botga o'tmasdan.</p></div>
+    </div>
+  </div>
+</section>
 
-<footer><div class="wrap">
-  <div>© <span id="y"></span> AliSave · <span data-i="ft">Ali Digital mahsuloti</span></div>
-  <div><a href="https://alisend.uz" target="_blank" rel="noopener">AliSend</a> · <a href="https://alichatbot.uz" target="_blank" rel="noopener">AliChatbot</a> · <a href="https://t.me/AliSaveUzBot" target="_blank" rel="noopener">Telegram</a></div>
-</div></footer>
+<!-- ======= COMPARISON ======= -->
+<section style="padding-top:24px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow" data-i="c_eb">Taqqoslash</div>
+      <h2 class="metal" data-i="c_h">Oddiy botlar va AliSave</h2>
+    </div>
+    <div class="cmp">
+      <div class="cmp-row"><div data-i="c_col1">Xususiyat</div><div data-i="c_col2">Oddiy botlar</div><div class="gold-col">AliSave</div></div>
+      <div class="cmp-row"><div data-i="c1">Reklama</div><div><span class="ck no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div><span class="ck yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 13l5 5L20 7"/></svg></span></div></div>
+      <div class="cmp-row"><div data-i="c2">Majburiy obuna</div><div><span class="ck no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div><span class="ck yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 13l5 5L20 7"/></svg></span></div></div>
+      <div class="cmp-row"><div data-i="c3">Fayl limiti</div><div>50 MB</div><div class="gold-col">2 GB</div></div>
+      <div class="cmp-row"><div data-i="c4">TikTok suv belgisi</div><div><span class="ck no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div><span class="ck yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 13l5 5L20 7"/></svg></span></div></div>
+      <div class="cmp-row"><div data-i="c5">Sifat tanlash</div><div><span class="ck no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div><span class="ck yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 13l5 5L20 7"/></svg></span></div></div>
+      <div class="cmp-row"><div data-i="c6">Guruh va inline rejim</div><div><span class="ck no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span></div><div><span class="ck yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 13l5 5L20 7"/></svg></span></div></div>
+      <div class="cmp-row"><div data-i="c7">Til</div><div data-i="c7a">Ruscha</div><div class="gold-col" data-i="c7b">O'zbek, rus, ingliz</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= FAQ ======= -->
+<section id="faq" class="faq" style="padding-top:24px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow" data-i="q_eb">Savol-javob</div>
+      <h2 class="metal" data-i="q_h">Ko'p so'raladigan savollar</h2>
+    </div>
+    <details><summary data-i="q1">Haqiqatan bepulmi?</summary><p data-i="q1a">Ha. Reklama ham, pullik "premium" ham yo'q. AliSave — Ali Digital mahsulotlaridan biri, AliSend va AliChatbot bilan bir oilada.</p></details>
+    <details><summary data-i="q2">Yopiq (private) akkauntlardan yuklaydimi?</summary><p data-i="q2a">Yo'q. Faqat ochiq (public) postlar. Bu Instagram va TikTok qoidasi, hech bir bot buni chetlab o'ta olmaydi.</p></details>
+    <details><summary data-i="q3">Qaysi saytlarni qo'llab-quvvatlaydi?</summary><p data-i="q3a">Instagram (reel, post, karusel), TikTok, YouTube va Shorts, Snapchat Spotlight, Facebook, X, Pinterest, Likee, VK, Reddit, Twitch va jami 1700 dan ortiq sayt.</p></details>
+    <details><summary data-i="q4">Guruhga qanday qo'shaman?</summary><p data-i="q4a">Guruh sozlamalari → A'zo qo'shish → @AliSaveUzBot. Shundan keyin guruhdagi har bir linkka bot video qaytaradi.</p></details>
+    <details><summary data-i="q5">Kunlik chegara bormi?</summary><p data-i="q5a">Adolat uchun har foydalanuvchiga kuniga 30 ta yuklash yoki 1 GB. Oddiy foydalanish uchun bu yetarli, ertasiga yana ochiladi.</p></details>
+  </div>
+</section>
+
+<!-- ======= FINAL ======= -->
+<section style="padding-top:12px">
+  <div class="wrap">
+    <div class="final">
+      <span class="paper" style="top:-24px;left:4%">⬇</span>
+      <span class="paper" style="bottom:-36px;right:5%">⬇</span>
+      <h2 class="metal" data-i="c_final">Keyingi videongiz allaqachon yo'lda</h2>
+      <p data-i="c_final_p">Ro'yxatdan o'tish yo'q. Botni oching, link tashlang.</p>
+      <a class="btn btn-gold btn-lg" href="https://t.me/AliSaveUzBot" target="_blank" rel="noopener" data-i="cta2">@AliSaveUzBot ni ochish</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======= FOOTER ======= -->
+<footer>
+  <div class="wrap foot">
+    <a class="logo" href="/">
+      <span class="logo-anim"><span class="lglow"></span><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="url(#coinG)"/><circle cx="60" cy="60" r="52" fill="none" stroke="url(#goldLg)" stroke-width="4"/><g class="ring-spin"><circle cx="60" cy="60" r="52" fill="none" stroke="#FFEDBE" stroke-width="4" stroke-dasharray="34 293" stroke-linecap="round" opacity=".85"/></g><path d="M60 30v34M41 49l19 19 19-19M38 88h44" stroke="#121216" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
+      <span class="metal-live">AliSave</span><span class="goldtext-live">.uz</span>
+    </a>
+    <div>© <span id="y"></span> AliSave.uz · <span data-i="ft">Ali Digital mahsuloti</span> · <a href="https://alisend.uz" style="color:var(--ink)">AliSend</a> · <a href="https://alichatbot.uz" style="color:var(--ink)">AliChatbot</a></div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a href="https://t.me/AliSaveUzBot" title="Telegram" style="width:36px;height:36px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;transition:.15s" onmouseover="this.style.borderColor='rgba(240,177,60,.35)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
+        <svg width="17" height="17" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#229ED9"/><path fill="#fff" d="M5.4 11.9l11.2-4.5c.5-.2 1 .1.8.9l-1.9 9c-.1.6-.5.8-1 .5l-2.9-2.1-1.4 1.3c-.2.2-.3.3-.6.3l.2-2.9 5.3-4.8c.2-.2 0-.3-.3-.1l-6.6 4.1-2.8-.9c-.6-.2-.6-.6 0-.8z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
 
 <script>
-const STATS_URL = "https://alisave-bot-production.up.railway.app/stats";
-const I = {
- ru: {open:"Открыть в Telegram",h1:"Скачивайте видео из Instagram, TikTok, YouTube <span>без рекламы</span>",lead:"Отправьте ссылку боту — через 10 секунд видео у вас. Без обязательных подписок, без рекламы, качество выбираете сами. Бесплатно.",cta:"Открыть @AliSaveUzBot",how:"Как это работает?",s_today:"скачано сегодня",s_week:"за 7 дней",s_total:"всего скачиваний",s_users:"пользователей",
- f_h:"Почему AliSave?",f_sub:"Другие боты заставляют подписываться на каналы, показывают рекламу, ставят в очередь. Мы — нет.",f1:"Без рекламы и подписок",f1p:"Никаких «подпишитесь на канал». Отправили ссылку — получили видео.",f2:"До 2 ГБ",f2p:"Длинные YouTube-видео приходят целиком, в 1080p и выше.",f3:"TikTok без водяного знака",f3p:"Чистое видео без логотипа. Фото и карусели из Instagram тоже.",f4:"MP3 и поиск музыки",f4p:"Вытащите музыку из любого видео или просто напишите название песни.",f5:"Работает в группах",f5p:"Добавьте в группу — бот ответит видео на любую ссылку.",f6:"Кружок и «поделиться»",f6p:"Одна кнопка — видео-кружок, другая — отправить другу напрямую.",
- h_h:"Как это работает?",h_sub:"Три шага, десять секунд.",st1:"Скопируйте ссылку",st1p:"В Instagram, TikTok или YouTube: «Поделиться» → «Копировать».",st2:"Отправьте боту",st2p:"В @AliSaveUzBot. Или в любом чате напишите @AliSaveUzBot ссылка.",st3:"Видео готово",st3p:"Воспроизводится прямо в чате. Под ним кнопки MP3, кружок, поделиться.",
- v_h:"Обычные боты vs AliSave",v_o:"Обычные боты-загрузчики",vo1:"Реклама после каждого видео",vo2:"Обязательная подписка на канал",vo3:"«В очереди 15 человек, ждите»",vo4:"Лимит 50 МБ, качество урезано",vo5:"TikTok с водяным знаком",va1:"Без рекламы, никогда",va2:"Без подписок",va3:"Параллельно, без очереди",va4:"2 ГБ, качество выбираете вы",va5:"Без водяного знака, оригинал",
- q_h:"Вопросы и ответы",q1:"Это правда бесплатно?",q1a:"Да. Ни рекламы, ни платного «премиума». Бот — один из продуктов Ali Digital.",q2:"Скачивает из закрытых аккаунтов?",q2a:"Нет. Только открытые (public) посты. Это правило Instagram и TikTok, ни один бот его не обходит.",q3:"Какие сайты поддерживаются?",q3a:"Instagram (reels, посты, карусели), TikTok, YouTube и Shorts, Snapchat Spotlight, Facebook, X, Pinterest, Likee, VK, Reddit, Twitch — всего более 1700 сайтов.",q4:"Как добавить в группу?",q4a:"Настройки группы → Добавить участника → @AliSaveUzBot. После этого бот отвечает видео на каждую ссылку в группе.",q5:"Как работает поиск музыки?",q5a:"Просто напишите боту название песни. Появятся 5 результатов, выбранный придёт как MP3.",
- c_h:"Попробуйте прямо сейчас",c_sub:"Без регистрации. Откройте бота и отправьте ссылку.",ft:"продукт Ali Digital"}
-};
-const uz = {}; document.querySelectorAll("[data-i]").forEach(e=>{uz[e.dataset.i]=uz[e.dataset.i]||e.innerHTML});
+const STATS_URL="https://alisave-bot-production.up.railway.app/stats";
+// mobil menyu
+const navToggle=document.getElementById('navToggle');
+const mobileMenu=document.getElementById('mobileMenu');
+if(navToggle&&mobileMenu){
+  navToggle.addEventListener('click',()=>{const open=mobileMenu.classList.toggle('open');navToggle.setAttribute('aria-expanded',open);});
+  mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mobileMenu.classList.remove('open');navToggle.setAttribute('aria-expanded','false');}));
+}
+document.querySelectorAll('a[href^="#"]').forEach(a=>{const href=a.getAttribute('href');if(!href||href.length<2)return;a.addEventListener('click',e=>{const t=document.querySelector(href);if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}});});
+document.getElementById('y').textContent=new Date().getFullYear();
+
+// ---- tillar ----
+const I={ru:{
+ n_how:"Как это работает",n_feat:"Возможности",n_faq:"Вопросы",open:"Открыть бота",eyebrow:"Прямо сейчас кто-то скачивает видео",
+ h1a:"Отправили ссылку —",h1b:"через 10 секунд",h1c:"видео у вас",lead:"Скачиваем видео из Instagram, TikTok, YouTube, Snapchat и 1700+ сайтов прямо в Telegram. Без рекламы, без обязательных подписок, без очереди. Бесплатно.",
+ cta:"Открыть бота — бесплатно",how:"Как это работает?",note:"Без регистрации. TikTok без водяного знака. До 2 ГБ.",fb1:"Instagram reel скачан · 4с",fb2:"TikTok · без водяного знака",online:"бот · онлайн",
+ s_today:"скачано сегодня",s_week:"за 7 дней",s_total:"всего скачиваний",s_users:"пользователей",
+ how_eb:"Как это работает",how_h:"Три шага — и видео в вашем Telegram",how_p:"Не нужно ставить приложение. Не нужно регистрироваться. Только ссылка.",
+ st1:"Скопируйте ссылку",st1p:"В Instagram, TikTok или YouTube: «Поделиться» → «Копировать ссылку».",st2:"Отправьте боту",st2p:"В @AliSaveUzBot. Или в любом чате напишите @AliSaveUzBot ссылка.",st3:"Видео готово",st3p:"Воспроизводится прямо в чате. Под ним кнопки MP3, кружок и «поделиться».",more:"1700+ сайтов",
+ f_eb:"Возможности",f_h:"То, чего не дают другие боты",f_sub:"Они заставляют подписываться на каналы, показывают рекламу, ставят в очередь. Мы — нет.",tag:"ГЛАВНОЕ ОТЛИЧИЕ",
+ f1:"Без рекламы и подписок",f1p:"Никаких «подпишитесь на канал». Отправили ссылку — получили видео. Рекламы не будет никогда.",
+ f2:"До 2 ГБ, качество выбираете вы",f2p:"Длинные YouTube-видео приходят целиком. От 360p до 4K — показываем размер и оставляем выбор вам.",
+ f3:"TikTok без водяного знака",f3p:"Чистое видео без логотипа, в оригинальном качестве. Фото и карусели из Instagram приходят альбомом.",
+ f4:"MP3 и поиск музыки",f4p:"Вытащите музыку из любого видео одной кнопкой. Или просто напишите название песни — 5 результатов, выбранный придёт как MP3.",
+ f5:"Работает в группах",f5p:"Добавьте в группу — бот ответит видео на любую ссылку. Для семейных и дружеских групп.",
+ f6:"Кружок и «поделиться»",f6p:"Одна кнопка — видео-кружок. Другая — отправить другу напрямую, не заходя в бота.",
+ c_eb:"Сравнение",c_h:"Обычные боты и AliSave",c_col1:"Функция",c_col2:"Обычные боты",c1:"Реклама",c2:"Обязательная подписка",c3:"Лимит файла",c4:"Водяной знак TikTok",c5:"Выбор качества",c6:"Группы и inline-режим",c7:"Язык",c7a:"Русский",c7b:"Узбекский, русский, английский",
+ q_eb:"Вопросы",q_h:"Часто задаваемые вопросы",q1:"Это правда бесплатно?",q1a:"Да. Ни рекламы, ни платного «премиума». AliSave — один из продуктов Ali Digital, в одной семье с AliSend и AliChatbot.",
+ q2:"Скачивает из закрытых аккаунтов?",q2a:"Нет. Только открытые (public) посты. Это правило Instagram и TikTok, ни один бот его не обходит.",
+ q3:"Какие сайты поддерживаются?",q3a:"Instagram (reels, посты, карусели), TikTok, YouTube и Shorts, Snapchat Spotlight, Facebook, X, Pinterest, Likee, VK, Reddit, Twitch — всего более 1700 сайтов.",
+ q4:"Как добавить в группу?",q4a:"Настройки группы → Добавить участника → @AliSaveUzBot. После этого бот отвечает видео на каждую ссылку в группе.",
+ q5:"Есть дневной лимит?",q5a:"Для справедливости — 30 загрузок или 1 ГБ в день на пользователя. Для обычного использования этого достаточно, на следующий день лимит обновляется.",
+ c_final:"Следующее видео уже в пути",c_final_p:"Без регистрации. Откройте бота и отправьте ссылку.",cta2:"Открыть @AliSaveUzBot",ft:"продукт Ali Digital"}};
+const uz={};document.querySelectorAll("[data-i]").forEach(e=>{uz[e.dataset.i]=uz[e.dataset.i]||e.innerHTML});
 function setLang(l){document.documentElement.lang=l;document.querySelectorAll("[data-i]").forEach(e=>{const k=e.dataset.i;e.innerHTML=(l==="uz"?uz[k]:(I[l][k]||uz[k]))});document.querySelectorAll(".lang button").forEach(b=>b.classList.toggle("on",b.dataset.l===l));try{localStorage.setItem("lang",l)}catch(e){}}
 document.querySelectorAll(".lang button").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
 try{const l=localStorage.getItem("lang")||((navigator.language||"").startsWith("ru")?"ru":"uz");if(l!=="uz")setLang(l)}catch(e){}
-document.getElementById("y").textContent=new Date().getFullYear();
+
+// ---- jonli statistika (100 yuklashdan keyin ko'rinadi) ----
 const fmt=n=>new Intl.NumberFormat("ru-RU").format(n);
-fetch(STATS_URL).then(r=>r.json()).then(s=>{if(!s||s.total<100){document.getElementById("stats").style.display="none";return}const set=(id,v)=>{const el=document.getElementById(id);let c=0;const step=Math.max(1,Math.ceil(v/40));const t=setInterval(()=>{c=Math.min(v,c+step);el.textContent=fmt(c);if(c>=v)clearInterval(t)},25)};set("s-today",s.today);set("s-week",s.week);set("s-total",s.total);set("s-users",s.users)}).catch(()=>{document.getElementById("stats").style.display="none"});
+fetch(STATS_URL).then(r=>r.json()).then(s=>{if(!s||s.total<100)return;document.getElementById("stats").hidden=false;const set=(id,v)=>{const el=document.getElementById(id);let c=0;const step=Math.max(1,Math.ceil(v/40));const t=setInterval(()=>{c=Math.min(v,c+step);el.textContent=fmt(c);if(c>=v)clearInterval(t)},25)};set("s-today",s.today);set("s-week",s.week);set("s-total",s.total);set("s-users",s.users)}).catch(()=>{});
+
+// ---- telefon mockup: link → video ----
+const body=document.getElementById('chatBody');
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const demos=[
+  {link:"instagram.com/reel/DdBxBj…",who:"beyondhijrah",site:"Instagram"},
+  {link:"tiktok.com/@tiktok/video/71065…",who:"tiktok",site:"TikTok"},
+  {link:"youtube.com/shorts/tPEE9Zw…",who:"Mylo the Cat",site:"YouTube"},
+  {link:"instagram.com/p/DcOX3hW…",who:"nasa",site:"Instagram"}
+];
+function timeNow(){const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function el(cls,html){const e=document.createElement('div');e.className=cls;e.innerHTML=html;body.appendChild(e);while(body.children.length>3)body.removeChild(body.firstChild);return e}
+let k=0;
+function cycle(){
+  const d=demos[k%demos.length];k++;
+  el('msg me','https://www.'+d.link);
+  const typing=setTimeout(()=>{const t=el('msg typing','⏳ Yuklanmoqda…');
+    setTimeout(()=>{t.remove();el('msg',`<div class="vid"><span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      <div class="m-row"><span class="m-k">👤</span><span class="m-v">${d.who}</span></div>
+      <div class="m-row"><span class="m-k">🔗</span><span class="m-v">${d.site}</span></div>
+      <div class="m-foot">${timeNow()} <span class="ticks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13l5 5L20 7"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13l5 5L20 7"/></svg></span></div>
+      <div class="kb"><span class="g">🎵 MP3</span><span>⭕ Dumaloq</span><span>↗️ Ulashish</span></div>`)},reduced?0:1400)},reduced?0:600);
+}
+cycle();
+if(!reduced)setInterval(cycle,5200);
 </script>
 </body>
 </html>
